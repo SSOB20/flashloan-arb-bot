@@ -7,6 +7,7 @@ const { mainnet: addresses } = require("./addresses");
 const web3 = new Web3(
   new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
 );
+web3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
 
 const kyber = new web3.eth.Contract(
   abis.kyber.kyberNetworkProxy,
@@ -77,6 +78,28 @@ const init = async () => {
 
       console.log("Uniswap ETH/DAI Price:");
       console.log(uniswapRate);
+
+      const gasPrice = await web3.eth.getGasPrice();
+      const txCost = 200000 * parseInt(gasPrice);
+      const curEthPrice = (uniswapRate.buy + uniswapRate.sell) / 2;
+      const profit1 =
+        parseInt(AMOUNT_ETH) * (uniswapRate.sell - kyberRate.buy) -
+        (txCost / 10 ** 18) * curEthPrice;
+      const profit2 =
+        parseInt(AMOUNT_ETH) * (kyberRate.sell - uniswapRate.buy) -
+        (txCost / 10 ** 18) * curEthPrice;
+
+      if (profit1 > 0) {
+        console.log("Arb opportunity found!");
+        console.log(`Buy ETH on Kyber at ${kyberRate.buy} DAI`);
+        console.log(`Sell ETH on Uniswap at ${uniswapRate.sell} DAI`);
+        console.log(`Expected profit: ${profit1} DAI`);
+      } else if (profit2 > 0) {
+        console.log("Arb opportunity found!");
+        console.log(`Buy ETH on Uniswap at ${uniswapRate.buy} DAI`);
+        console.log(`Sell ETH on Kyber at ${kyberRate.sell} DAI`);
+        console.log(`Expected profit: ${profit2} DAI`);
+      }
     })
     .on("error", (err) => {
       console.log(err);
