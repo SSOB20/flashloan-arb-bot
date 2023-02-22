@@ -1,7 +1,6 @@
 {
   "name": "flashloan-arb-bot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,5 +13,18 @@
     "@uniswap/sdk": "^2.0.6",
     "dotenv": "^16.0.3",
     "web3": "^1.2.9"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edohoangt/flashloan-arb-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edohoangt/flashloan-arb-bot/issues"
+  },
+  "homepage": "https://github.com/edohoangt/flashloan-arb-bot#readme",
+  "description": ""
 }
